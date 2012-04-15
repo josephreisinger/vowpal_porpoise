@@ -10,3 +10,8 @@ class Instance(object):
     def __repr__(self):
         return u'%s %f |%s' % (str(self.label), self.weight, \
                 u' |'.join([u'%s %s' % (namespace, feats) for namespace, feats in self.featurize().iteritems()]))
+
+
+class SimpleInstance(Instance):
+    def featurize(self):
+        return {'a': self.raw_features}
