@@ -4,21 +4,18 @@ import sys
 import subprocess
 import shlex
 import tempfile
-
-import pleiades.log as log
-
-from pleiades.memoized import memoized
-from pleiades.os_ import safe_remove
+from vp_utils import memoized, safe_remove, VPLogger
 
 
 class VWBase(object):
     DEFAULT_VW_PATH = "/mnt/vowpal_wabbit/vw"
 
     def __init__(self,
+                 logger=None,
                  old_model=None,
                  vw=DEFAULT_VW_PATH,
                  moniker=None,
-                 name='',
+                 name=None,
                  bits=None,
                  loss=None,
                  passes=None,
@@ -44,8 +41,18 @@ class VWBase(object):
         if not os.path.exists(vw):
             raise Exception("Cannot find executable for vowpal wabbit! (Given %s)" % vw)
 
+        if logger is None:
+            self.log = VPLogger()
+        else:
+            self.log = logger
+
+        if name is None:
+            self.handle = '%s' % moniker
+        else:
+            self.handle = '%s.%s' % (moniker, name)
+
         if old_model is None:
-            self.filename = '%s.%s.model' % (moniker, name)
+            self.filename = '%s.model' % self.handle
             self.incremental = False
         else:
             self.filename = old_model
@@ -113,7 +120,7 @@ class VWBase(object):
             return self.vw_base_command() + ' --passes %d --cache_file %s -i %s -f %s' \
                     % (self.passes, cache_file, model_file, model_file)
         else:
-            log.debug('No existing model file or not options.incremental')
+            self.log.debug('No existing model file or not options.incremental')
             return self.vw_base_command() + ' --passes %d --cache_file %s -f %s' \
                     % (self.passes, cache_file, model_file)
 
@@ -186,7 +193,7 @@ class VWBase(object):
             stderr = open(self.current_stderr, 'w')
             stdout.write(command + '\n')
             stderr.write(command + '\n')
-        log.debug('Running command: "%s"' % str(command))
+        self.log.debug('Running command: "%s"' % str(command))
         result = subprocess.Popen(shlex.split(str(command)), stdin=subprocess.PIPE, stdout=stdout, stderr=stderr, close_fds=True, universal_newlines=True)
         result.command = command
         return result
@@ -198,13 +205,13 @@ class VWBase(object):
         return open(self.currente_stderr)
 
     def get_prediction_file(self):
-        return os.path.join(self.working_directory, '%s.%s.predictions' % (self.moniker, self.name))
+        return os.path.join(self.working_directory, '%s.predictions' % (self.handle))
 
     def get_model_file(self):
         return os.path.join(self.working_directory, self.filename)
 
     def get_cache_file(self):
-        return os.path.join(self.working_directory, '%s.%s.cache' % (self.moniker, self.name))
+        return os.path.join(self.working_directory, '%s.cache' % (self.hanfle))
 
 
 class VW(VWBase):
