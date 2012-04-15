@@ -4,7 +4,6 @@ import sys
 import subprocess
 import shlex
 import tempfile
-import itertools
 
 import pleiades.log as log
 
@@ -218,4 +217,3 @@ class VWLDA(VWBase):
     def read_predictions(self):
         for x in open(self.process.prediction_file):
             yield map(float, x.split())
-
