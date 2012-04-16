@@ -211,7 +211,7 @@ class VWBase(object):
         return os.path.join(self.working_directory, self.filename)
 
     def get_cache_file(self):
-        return os.path.join(self.working_directory, '%s.cache' % (self.hanfle))
+        return os.path.join(self.working_directory, '%s.cache' % (self.handle))
 
 
 class VW(VWBase):

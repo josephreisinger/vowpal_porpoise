@@ -61,13 +61,13 @@ Basic logger functionality; replace this with a real logger of your choice
 
 class VPLogger:
     def debug(self, s):
-        print '[DEBUG] %s\n' % s
+        print '[DEBUG] %s' % s
 
     def info(self, s):
-        print '[INFO] %s\n' % s
+        print '[INFO] %s' % s
 
     def warning(self, s):
-        print '[WARNING] %s\n' % s
+        print '[WARNING] %s' % s
 
     def error(self, s):
-        print '[ERROR] %s\n' % s
+        print '[ERROR] %s' % s
