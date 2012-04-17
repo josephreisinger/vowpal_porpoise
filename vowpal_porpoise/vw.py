@@ -7,7 +7,7 @@ import tempfile
 from vp_utils import memoized, safe_remove, VPLogger
 
 
-class VWBase(object):
+class VW:
     DEFAULT_VW_PATH = "/mnt/vowpal_wabbit/vw"
 
     def __init__(self,
@@ -172,8 +172,8 @@ class VWBase(object):
                 (self.process.pid, self.process.command, self.process.returncode))
 
     def read_predictions_(self):
-        for x  in self.read_predictions():
-            yield x
+        for x in open(self.process.prediction_file):
+            yield map(float, x.split())
         # clean up the prediction file
         os.remove(self.process.prediction_file)
 
@@ -212,15 +212,3 @@ class VWBase(object):
 
     def get_cache_file(self):
         return os.path.join(self.working_directory, '%s.cache' % (self.handle))
-
-
-class VW(VWBase):
-    def read_predictions(self):
-        for x in open(self.process.prediction_file):
-            yield float(x)
-
-
-class VWLDA(VWBase):
-    def read_predictions(self):
-        for x in open(self.process.prediction_file):
-            yield map(float, x.split())
