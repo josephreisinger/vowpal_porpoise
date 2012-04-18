@@ -20,6 +20,7 @@ class VW:
                  loss=None,
                  passes=None,
                  log_stderr_to_file=False,
+                 silent=False,
                  l1=None,
                  l2=None,
                  learning_rate=None,
@@ -67,6 +68,7 @@ class VW:
         self.learning_rate = learning_rate
         self.moniker = moniker
         self.log_stderr_to_file = log_stderr_to_file
+        self.silent = silent 
         self.passes = passes
         self.quadratic = quadratic
         self.power_t = power_t
@@ -180,8 +182,7 @@ class VW:
     def make_subprocess(self, command):
         if not self.log_stderr_to_file:
             stdout = open('/dev/null', 'w')
-            # stderr = open('/dev/null', 'w')
-            stderr = sys.stderr
+            stderr = open('/dev/null', 'w') if self.silent else sys.stderr
             self.current_stdout = None
             self.current_stderr = None
         else:
@@ -202,7 +203,7 @@ class VW:
         return open(self.current_stdout)
 
     def get_current_stderr(self):
-        return open(self.currente_stderr)
+        return open(self.current_stderr)
 
     def get_prediction_file(self):
         return os.path.join(self.working_directory, '%s.predictions' % (self.handle))
