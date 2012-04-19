@@ -175,7 +175,10 @@ class VW:
 
     def read_predictions_(self):
         for x in open(self.process.prediction_file):
-            yield map(float, x.split())
+            if self.lda:
+                yield map(float, x.split())
+            else:
+                yield float(x)
         # clean up the prediction file
         os.remove(self.process.prediction_file)
 
