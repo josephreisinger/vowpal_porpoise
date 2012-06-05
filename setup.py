@@ -11,7 +11,7 @@ setuptools.setup(name='vowpal_porpoise',
       install_requires=[],
       ext_modules=[setuptools.extension.Extension(
               "vw_py",
-              ["src/vw.pxd", "src/vw_py.cpp"],
+              ["src/vw.pyx", "src/vw_py.cpp"],
               language="c++",
               include_dirs=["/mnt/vowpal_wabbit/"],
               library_dirs=['/mnt/vowpal_wabbit/vowpalwabbit'],
