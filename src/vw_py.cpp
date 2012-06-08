@@ -17,9 +17,8 @@ void finalize() {
 }
 
 float learn(char* line) {
-    if (_vw == NULL) {
-        cout << "attemping to learn before initialization";
-    }
+    // cout << "hi";
+    // out << "hi" << line;
     example* v = VW::read_example(*_vw, line);
     _vw->learn(_vw, v);
     float p = v->final_prediction;
