@@ -36,6 +36,7 @@ class VW:
                  lda_rho=None,
                  lda_alpha=None,
                  minibatch=None,
+                 oaa=None,
                  **kwargs):
         assert moniker and passes
 
@@ -81,6 +82,7 @@ class VW:
         self.lda_rho = lda_rho
         self.lda_alpha = lda_alpha
         self.minibatch = minibatch
+        self.oaa = oaa
 
         # Do some sanity checking for compatability between models
         if self.lda:
@@ -88,6 +90,7 @@ class VW:
             assert not self.l2
             assert not self.loss
             assert not self.adaptive
+            assert not self.oaa
         else:
             assert not self.lda_D
             assert not self.lda_rho
@@ -113,6 +116,7 @@ class VW:
         if self.lda_rho             is not None: l.append('--lda_rho=%f' % self.lda_rho)
         if self.lda_alpha           is not None: l.append('--lda_alpha=%f' % self.lda_alpha)
         if self.minibatch           is not None: l.append('--minibatch=%d' % self.minibatch)
+        if self.oaa           is not None: l.append('--oaa=%d' % self.oaa)
         if self.audit:                           l.append('--audit')
         if self.adaptive:                        l.append('--adaptive')
         return ' '.join(l)
