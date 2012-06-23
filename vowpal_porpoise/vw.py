@@ -12,7 +12,6 @@ class VW:
 
     def __init__(self,
                  logger=None,
-                 old_model=None,
                  vw=DEFAULT_VW_PATH,
                  moniker=None,
                  name=None,
@@ -37,6 +36,8 @@ class VW:
                  lda_alpha=None,
                  minibatch=None,
                  oaa=None,
+                 bfgs=None,
+                 incremental=False,
                  **kwargs):
         assert moniker and passes
 
@@ -53,12 +54,8 @@ class VW:
         else:
             self.handle = '%s.%s' % (moniker, name)
 
-        if old_model is None:
-            self.filename = '%s.model' % self.handle
-            self.incremental = False
-        else:
-            self.filename = old_model
-            self.incremental = True
+        self.incremental = incremental
+        self.filename = '%s.model' % self.handle
 
         self.name = name
         self.bits = bits
@@ -83,14 +80,17 @@ class VW:
         self.lda_alpha = lda_alpha
         self.minibatch = minibatch
         self.oaa = oaa
+        self.bfgs = bfgs
 
         # Do some sanity checking for compatability between models
         if self.lda:
+            assert not self.l1
             assert not self.l1
             assert not self.l2
             assert not self.loss
             assert not self.adaptive
             assert not self.oaa
+            assert not self.bfgs
         else:
             assert not self.lda_D
             assert not self.lda_rho
@@ -118,6 +118,7 @@ class VW:
         if self.minibatch           is not None: l.append('--minibatch=%d' % self.minibatch)
         if self.oaa           is not None: l.append('--oaa=%d' % self.oaa)
         if self.audit:                           l.append('--audit')
+        if self.bfgs:                           l.append('--bfgs')
         if self.adaptive:                        l.append('--adaptive')
         return ' '.join(l)
 
@@ -172,6 +173,7 @@ class VW:
 
     def close_process(self):
         assert self.process
+        self.process.stdin.flush()
         self.process.stdin.close()
         if self.process.wait() != 0:
             raise Exception("Process %d (%s) exited abnormally with return code %d" % \
