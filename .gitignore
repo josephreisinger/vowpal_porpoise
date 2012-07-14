@@ -1,3 +1,5 @@
 *.egg-info
 *.so
 build/
+*.pyc
+.*.un~
