@@ -38,6 +38,7 @@ class VW:
                  total=None,
                  node=None,
                  unique_id=None,
+                 span_server=None,
                  bfgs=None,
                  oaa=None,
                  old_model=None,
@@ -56,6 +57,11 @@ class VW:
         self.node = node
         self.total = total
         self.unique_id = unique_id
+        if self.node is not None:
+            assert self.total is not None
+            assert self.unique_id is not None
+            assert self.span_server is not None
+            self.span_server = span_server
 
         if name is None:
             self.handle = '%s' % moniker
@@ -137,6 +143,7 @@ class VW:
         if self.unique_id           is not None: l.append('--unique_id=%d' % self.unique_id)
         if self.total               is not None: l.append('--total=%d' % self.total)
         if self.node                is not None: l.append('--node=%d' % self.node)
+        if self.span_server                is not None: l.append('--span_server=%d' % self.span_server)
         if self.audit:                           l.append('--audit')
         if self.bfgs:                            l.append('--bfgs')
         if self.adaptive:                        l.append('--adaptive')
