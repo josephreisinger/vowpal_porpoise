@@ -57,11 +57,11 @@ class VW:
         self.node = node
         self.total = total
         self.unique_id = unique_id
+        self.span_server = span_server
         if self.node is not None:
             assert self.total is not None
             assert self.unique_id is not None
             assert self.span_server is not None
-            self.span_server = span_server
 
         if name is None:
             self.handle = '%s' % moniker
