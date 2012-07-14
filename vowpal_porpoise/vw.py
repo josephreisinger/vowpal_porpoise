@@ -12,7 +12,6 @@ class VW:
 
     def __init__(self,
                  logger=None,
-                 old_model=None,
                  vw=DEFAULT_VW_PATH,
                  moniker=None,
                  name=None,
@@ -39,7 +38,10 @@ class VW:
                  total=None,
                  node=None,
                  unique_id=None,
+                 bfgs=None,
                  oaa=None,
+                 old_model=None,
+                 incremental=False,
                  **kwargs):
         assert moniker and passes
 
@@ -70,6 +72,9 @@ class VW:
             self.filename = old_model
             self.incremental = True
 
+        self.incremental = incremental
+        self.filename = '%s.model' % self.handle
+
         self.name = name
         self.bits = bits
         self.loss = loss
@@ -92,14 +97,17 @@ class VW:
         self.lda_alpha = lda_alpha
         self.minibatch = minibatch
         self.oaa = oaa
+        self.bfgs = bfgs
 
         # Do some sanity checking for compatability between models
         if self.lda:
+            assert not self.l1
             assert not self.l1
             assert not self.l2
             assert not self.loss
             assert not self.adaptive
             assert not self.oaa
+            assert not self.bfgs
         else:
             assert not self.lda_D
             assert not self.lda_rho
@@ -130,6 +138,7 @@ class VW:
         if self.total               is not None: l.append('--total=%d' % self.total)
         if self.node                is not None: l.append('--node=%d' % self.node)
         if self.audit:                           l.append('--audit')
+        if self.bfgs:                            l.append('--bfgs')
         if self.adaptive:                        l.append('--adaptive')
         return ' '.join(l)
 
@@ -184,6 +193,7 @@ class VW:
 
     def close_process(self):
         assert self.process
+        self.process.stdin.flush()
         self.process.stdin.close()
         if self.process.wait() != 0:
             raise Exception("Process %d (%s) exited abnormally with return code %d" % \
