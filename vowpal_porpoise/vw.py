@@ -36,6 +36,9 @@ class VW:
                  lda_rho=None,
                  lda_alpha=None,
                  minibatch=None,
+                 total=None,
+                 node=None,
+                 unique_id=None,
                  oaa=None,
                  **kwargs):
         assert moniker and passes
@@ -48,10 +51,17 @@ class VW:
         else:
             self.log = logger
 
+        self.node = node
+        self.total = total
+        self.unique_id = unique_id
+
         if name is None:
             self.handle = '%s' % moniker
         else:
             self.handle = '%s.%s' % (moniker, name)
+
+        if self.node is not None:
+            self.handle = "%s.%d" % (self.handle, self.node)
 
         if old_model is None:
             self.filename = '%s.model' % self.handle
@@ -67,9 +77,8 @@ class VW:
         self.l1 = l1
         self.l2 = l2
         self.learning_rate = learning_rate
-        self.moniker = moniker
         self.log_stderr_to_file = log_stderr_to_file
-        self.silent = silent 
+        self.silent = silent
         self.passes = passes
         self.quadratic = quadratic
         self.power_t = power_t
@@ -117,6 +126,9 @@ class VW:
         if self.lda_alpha           is not None: l.append('--lda_alpha=%f' % self.lda_alpha)
         if self.minibatch           is not None: l.append('--minibatch=%d' % self.minibatch)
         if self.oaa                 is not None: l.append('--oaa=%d' % self.oaa)
+        if self.unique_id           is not None: l.append('--unique_id=%d' % self.unique_id)
+        if self.total               is not None: l.append('--total=%d' % self.total)
+        if self.node                is not None: l.append('--node=%d' % self.node)
         if self.audit:                           l.append('--audit')
         if self.adaptive:                        l.append('--adaptive')
         return ' '.join(l)
