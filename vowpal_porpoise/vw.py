@@ -43,6 +43,7 @@ class VW:
                  oaa=None,
                  old_model=None,
                  incremental=False,
+                 mem=None,
                  **kwargs):
         assert moniker and passes
 
@@ -104,6 +105,7 @@ class VW:
         self.minibatch = minibatch
         self.oaa = oaa
         self.bfgs = bfgs
+        self.mem = mem
 
         # Do some sanity checking for compatability between models
         if self.lda:
@@ -144,6 +146,7 @@ class VW:
         if self.total               is not None: l.append('--total=%d' % self.total)
         if self.node                is not None: l.append('--node=%d' % self.node)
         if self.span_server         is not None: l.append('--span_server=%s' % self.span_server)
+        if self.mem                 is not None: l.append('--mem=%d' % self.mem)
         if self.audit:                           l.append('--audit')
         if self.bfgs:                            l.append('--bfgs')
         if self.adaptive:                        l.append('--adaptive')
