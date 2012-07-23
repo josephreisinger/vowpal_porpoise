@@ -5,9 +5,7 @@ cdef class VW:
         vw_py.initialize(params)
 
     def learn(self, example):
-        vw_py.learn(example)
+        return vw_py.learn(example)
 
-    def destory(self):
-        vw_py.finalize()
-
-
+    def finish(self):
+        vw_py.finish()

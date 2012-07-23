@@ -2,7 +2,7 @@
 #define VW_PY_H
 
 void initialize(char* params);
-void finalize();
+void finish();
 float learn(char* example);
 
 #endif

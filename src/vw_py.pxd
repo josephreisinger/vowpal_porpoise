@@ -1,4 +1,4 @@
 cdef extern from "vw_py.h":
     void initialize(char*)
-    void finalize()
+    void finish()
     float learn(char*)

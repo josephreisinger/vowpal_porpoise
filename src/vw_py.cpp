@@ -14,7 +14,7 @@ void initialize(char* params) {
     _initialized = true;
 }
 
-void finalize() {
+void finish() {
     assert(_initialized);
     VW::finish(_vw);
 }
@@ -22,14 +22,11 @@ void finalize() {
 float learn(char* line) {
     assert(_initialized);
 
-    cout << "no1" << "[" << line << "]" << endl;
+    // cout << "no1" << "[" << line << "]" << endl;
     example* v = VW::read_example(_vw, line);
-
-    cout << "no3" << endl;
     _vw.learn(&_vw, v);
     float p = v->final_prediction;
-    cout << "no5" << endl;
     VW::finish_example(_vw, v);
-    cout << "no6" << "[" << p << "]" << endl;
+    // cout << "no6" << "[" << p << "]" << endl;
     return p;
 }
