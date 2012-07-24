@@ -9,6 +9,7 @@ vw _vw;
 bool _initialized = false;
 
 void initialize(char* params) {
+    assert(!_initialized);
     cout << "initialized with params=[" << std::string(params) << "]" << endl;
     _vw = VW::initialize(std::string(params));
     _initialized = true;
@@ -22,11 +23,10 @@ void finish() {
 float learn(char* line) {
     assert(_initialized);
 
-    // cout << "no1" << "[" << line << "]" << endl;
     example* v = VW::read_example(_vw, line);
     _vw.learn(&_vw, v);
     float p = v->final_prediction;
     VW::finish_example(_vw, v);
-    // cout << "no6" << "[" << p << "]" << endl;
+
     return p;
 }
