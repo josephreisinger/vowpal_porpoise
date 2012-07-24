@@ -30,20 +30,13 @@ class SimpleModel(object):
 
     def predict(self, instance_stream):
         self.log.info('%s: predicting' % self.moniker)
-        instances = []
         with self.model.predicting():
             seen = 0
             for instance in instance_stream:
-                self.model.push_instance(instance)
-                instances.append(instance)
+                yield instance, self.model.push_instance(instance)
                 seen += 1
 
         self.log.info('%s: predicted for %d data points' % (self.moniker, seen))
-        predictions = list(self.model.read_predictions_())
-        if seen != len(predictions):
-            raise Exception("Number of labels and predictions do not match!  (%d vs %d)" % \
-                (seen, len(predictions)))
-        return itertools.izip(instances, predictions)
 
 
 if __name__ == '__main__':

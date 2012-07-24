@@ -6,6 +6,8 @@ import shlex
 import tempfile
 from vp_utils import memoized, safe_remove, VPLogger
 
+import vw_py
+
 
 class VW:
     def __init__(self,
@@ -119,9 +121,9 @@ class VW:
 
         self.working_directory = working_dir or os.getcwd()
 
-    @memoized
-    def vw_base_command(self):
-        l = [self.vw]
+    # @memoized
+    def vw_base_command(self, base):
+        l = base
         if self.bits                is not None: l.append('-b %d' % self.bits)
         if self.learning_rate       is not None: l.append('--learning_rate=%f' % self.learning_rate)
         if self.l1                  is not None: l.append('--l1=%f' % self.l1)
@@ -147,32 +149,29 @@ class VW:
         if self.adaptive:                        l.append('--adaptive')
         return ' '.join(l)
 
-    def vw_train_command(self, cache_file, model_file):
+    def vw_train_command(self, cache_file, model_file, base=[]):
         if os.path.exists(model_file) and self.incremental:
-            return self.vw_base_command() + ' --passes %d --cache_file %s -i %s -f %s' \
+            return self.vw_base_command(base) + ' --passes %d --cache_file %s -i %s -f %s' \
                     % (self.passes, cache_file, model_file, model_file)
         else:
             self.log.debug('No existing model file or not options.incremental')
-            return self.vw_base_command() + ' --passes %d --cache_file %s -f %s' \
+            return self.vw_base_command(base) + ' --passes %d --cache_file %s -f %s' \
                     % (self.passes, cache_file, model_file)
 
-    def vw_test_command(self, model_file, prediction_file):
-        return self.vw_base_command() + ' -t -i %s -p %s' % (model_file, prediction_file)
+    def vw_test_command(self, model_file, base=[]):
+        return self.vw_base_command(base) + ' -t -i %s' % (model_file)
 
     @contextmanager
     def training(self):
         self.start_training()
         yield
-        self.close_process()
+        self.end_training()
 
     @contextmanager
     def predicting(self):
         self.start_predicting()
         yield
-        self.close_process()
-
-    def push_instance(self, instance):
-        self.process.stdin.write(('%s\n' % instance).encode('utf8'))
+        self.end_predicting()
 
     def start_training(self):
         cache_file = self.get_cache_file()
@@ -184,34 +183,43 @@ class VW:
             safe_remove(model_file)
 
         # Run the actual training
-        self.process = self.make_subprocess(self.vw_train_command(cache_file, model_file))
+        self.vw_process = self.make_subprocess(self.vw_train_command(cache_file, model_file, base=[self.vw]))
+
+        # set the instance pusher
+        self.push_instance = self.train_push_instance
+
+    def end_training(self):
+        # Close the process
+        assert self.vw_process
+        self.vw_process.stdin.flush()
+        self.vw_process.stdin.close()
+        if self.vw_process.wait() != 0:
+            raise Exception("vw_process %d (%s) exited abnormally with return code %d" % \
+                (self.vw_process.pid, self.vw_process.command, self.vw_process.returncode))
+
+    def train_push_instance(self, instance):
+        self.vw_process.stdin.write(('%s\n' % instance).encode('utf8'))
 
     def start_predicting(self):
         model_file = self.get_model_file()
-        # Be sure that the prediction file has a unique filename, since many processes may try to
-        # make predictions using the same model at the same time
-        _, prediction_file = tempfile.mkstemp(dir='.', prefix=self.get_prediction_file())
-        os.close(_)
+        self.vw_process = vw_py.VW(self.vw_test_command(model_file))
 
-        self.process = self.make_subprocess(self.vw_test_command(model_file, prediction_file))
-        self.process.prediction_file = prediction_file
+        # Set the library instance pusher
+        self.push_instance = self.predict_push_instance
 
-    def close_process(self):
-        assert self.process
-        self.process.stdin.flush()
-        self.process.stdin.close()
-        if self.process.wait() != 0:
-            raise Exception("Process %d (%s) exited abnormally with return code %d" % \
-                (self.process.pid, self.process.command, self.process.returncode))
+    def end_predicting(self):
+        # Close the process
+        assert self.vw_process
+        self.vw_process.finish()
 
-    def read_predictions_(self):
-        for x in open(self.process.prediction_file):
-            if self.lda:
-                yield map(float, x.split())
-            else:
-                yield float(x)
-        # clean up the prediction file
-        os.remove(self.process.prediction_file)
+    def parse_prediction(self, p):
+        if self.lda:
+            return map(float, p.split())
+        else:
+            return float(p)
+
+    def predict_push_instance(self, instance):
+        return self.parse_prediction(self.vw_process.learn(('%s\n' % instance).encode('utf8')))
 
     def make_subprocess(self, command):
         if not self.log_stderr_to_file:
@@ -238,9 +246,6 @@ class VW:
 
     def get_current_stderr(self):
         return open(self.current_stderr)
-
-    def get_prediction_file(self):
-        return os.path.join(self.working_directory, '%s.predictions' % (self.handle))
 
     def get_model_file(self):
         return os.path.join(self.working_directory, self.filename)
