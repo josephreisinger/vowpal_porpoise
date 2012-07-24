@@ -3,3 +3,7 @@
 build/
 *.pyc
 .*.un~
+*.cache
+*.model
+dist/
+
