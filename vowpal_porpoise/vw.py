@@ -8,11 +8,9 @@ from vp_utils import memoized, safe_remove, VPLogger
 
 
 class VW:
-    DEFAULT_VW_PATH = "/mnt/vowpal_wabbit/vw"
-
     def __init__(self,
                  logger=None,
-                 vw=DEFAULT_VW_PATH,
+                 vw='vw',
                  moniker=None,
                  name=None,
                  bits=None,
@@ -46,9 +44,6 @@ class VW:
                  mem=None,
                  **kwargs):
         assert moniker and passes
-
-        if not os.path.exists(vw):
-            raise Exception("Cannot find executable for vowpal wabbit! (Given %s)" % vw)
 
         if logger is None:
             self.log = VPLogger()
