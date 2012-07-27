@@ -149,17 +149,20 @@ class VW:
         if self.adaptive:                        l.append('--adaptive')
         return ' '.join(l)
 
-    def vw_train_command(self, cache_file, model_file, base=[]):
+    def vw_train_command(self, cache_file, model_file):
         if os.path.exists(model_file) and self.incremental:
-            return self.vw_base_command(base) + ' --passes %d --cache_file %s -i %s -f %s' \
+            return self.vw_base_command([self.vw]) + ' --passes %d --cache_file %s -i %s -f %s' \
                     % (self.passes, cache_file, model_file, model_file)
         else:
             self.log.debug('No existing model file or not options.incremental')
-            return self.vw_base_command(base) + ' --passes %d --cache_file %s -f %s' \
+            return self.vw_base_command([self.vw]) + ' --passes %d --cache_file %s -f %s' \
                     % (self.passes, cache_file, model_file)
 
-    def vw_test_command(self, model_file, base=[]):
-        return self.vw_base_command(base) + ' -t -i %s' % (model_file)
+    def vw_test_command(self, model_file, prediction_file):
+        return self.vw_base_command([self.vw]) + ' -t -i %s -p %s' % (model_file, prediction_file)
+
+    def vw_test_command_library(self, model_file):
+        return self.vw_base_command([]) + ' -t -i %s' % (model_file)
 
     @contextmanager
     def training(self):
@@ -189,7 +192,7 @@ class VW:
             safe_remove(model_file)
 
         # Run the actual training
-        self.vw_process = self.make_subprocess(self.vw_train_command(cache_file, model_file, base=[self.vw]))
+        self.vw_process = self.make_subprocess(self.vw_train_command(cache_file, model_file))
 
         # set the instance pusher
         self.push_instance = self.push_instance_stdin
@@ -219,7 +222,7 @@ class VW:
 
     def start_predicting_library(self):
         model_file = self.get_model_file()
-        self.vw_process = vw_py.VW(self.vw_test_command(model_file))
+        self.vw_process = vw_py.VW(self.vw_test_command_library(model_file))
 
         # Set the library instance pusher
         self.push_instance = self.predict_push_instance
