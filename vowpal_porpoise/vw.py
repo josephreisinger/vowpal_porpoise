@@ -269,3 +269,6 @@ class VW:
 
     def get_cache_file(self):
         return os.path.join(self.working_directory, '%s.cache' % (self.handle))
+
+    def get_prediction_file(self):
+        return os.path.join(self.working_directory, '%s.prediction' % (self.handle))
