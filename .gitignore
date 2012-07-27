@@ -6,4 +6,4 @@ build/
 *.cache
 *.model
 dist/
-
+*.writing
