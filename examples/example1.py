@@ -30,7 +30,7 @@ class SimpleModel(object):
 
     def predict_library(self, instance_stream):
         self.log.info('%s: predicting' % self.moniker)
-        with self.model.predicting():
+        with self.model.predicting_library():
             seen = 0
             for instance in instance_stream:
                 yield instance, self.model.push_instance(instance)
