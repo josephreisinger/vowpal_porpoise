@@ -216,8 +216,8 @@ class VW:
         _, prediction_file = tempfile.mkstemp(dir='.', prefix=self.get_prediction_file())
         os.close(_)
 
-        self.process = self.make_subprocess(self.vw_test_command(model_file, prediction_file))
-        self.process.prediction_file = prediction_file
+        self.vw_process = self.make_subprocess(self.vw_test_command(model_file, prediction_file))
+        self.prediction_file = prediction_file
         self.push_instance = self.push_instance_stdin
 
     def start_predicting_library(self):
@@ -237,6 +237,12 @@ class VW:
             return map(float, p.split())
         else:
             return float(p)
+
+    def read_predictions_(self):
+        for x in open(self.prediction_file):
+            yield self.parse_prediction(x)
+        # clean up the prediction file
+        os.remove(self.prediction_file)
 
     def predict_push_instance(self, instance):
         return self.parse_prediction(self.vw_process.learn(('%s\n' % instance).encode('utf8')))
