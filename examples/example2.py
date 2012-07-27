@@ -28,15 +28,18 @@ def train(positive_bag, negative_bag, passes, params):
     train_total = 0
     for p in range(passes):
         for label, features in stream_instances(positive_bag, negative_bag):
+            print make_instance(label, features)
             if random.random() < 0.01:
                 test_sample.append((label, features))
-            pred = int(a.learn(make_instance(label, features)) > 0.5)
+            else:
+                pred = int(a.learn(make_instance(label, features)) > 0.5)
 
             if pred == label:
                 train_correct += 1
             train_total += 1
 
     a.finish()
+    assert False
 
     # test
     b = vw_py.VW("--cache_file=alice.cache -i alice.model")

@@ -165,13 +165,19 @@ class VW:
     def training(self):
         self.start_training()
         yield
-        self.end_training()
+        self.close_process()
 
     @contextmanager
     def predicting(self):
         self.start_predicting()
         yield
-        self.end_predicting()
+        self.close_process()
+
+    @contextmanager
+    def predicting_library(self):
+        self.start_predicting_library()
+        yield
+        self.end_predicting_library()
 
     def start_training(self):
         cache_file = self.get_cache_file()
@@ -186,9 +192,9 @@ class VW:
         self.vw_process = self.make_subprocess(self.vw_train_command(cache_file, model_file, base=[self.vw]))
 
         # set the instance pusher
-        self.push_instance = self.train_push_instance
+        self.push_instance = self.push_instance_stdin
 
-    def end_training(self):
+    def close_process(self):
         # Close the process
         assert self.vw_process
         self.vw_process.stdin.flush()
@@ -197,17 +203,28 @@ class VW:
             raise Exception("vw_process %d (%s) exited abnormally with return code %d" % \
                 (self.vw_process.pid, self.vw_process.command, self.vw_process.returncode))
 
-    def train_push_instance(self, instance):
+    def push_instance_stdin(self, instance):
         self.vw_process.stdin.write(('%s\n' % instance).encode('utf8'))
 
     def start_predicting(self):
+        model_file = self.get_model_file()
+        # Be sure that the prediction file has a unique filename, since many processes may try to
+        # make predictions using the same model at the same time
+        _, prediction_file = tempfile.mkstemp(dir='.', prefix=self.get_prediction_file())
+        os.close(_)
+
+        self.process = self.make_subprocess(self.vw_test_command(model_file, prediction_file))
+        self.process.prediction_file = prediction_file
+        self.push_instance = self.push_instance_stdin
+
+    def start_predicting_library(self):
         model_file = self.get_model_file()
         self.vw_process = vw_py.VW(self.vw_test_command(model_file))
 
         # Set the library instance pusher
         self.push_instance = self.predict_push_instance
 
-    def end_predicting(self):
+    def end_predicting_library(self):
         # Close the process
         assert self.vw_process
         self.vw_process.finish()
