@@ -14,7 +14,7 @@ setuptools.setup(name='vowpal_porpoise',
               ["src/vw.pyx", "src/vw_c.cpp"],
               language="c++",
               include_dirs=["/mnt/vowpal_wabbit/"],
-              library_dirs=['/mnt/vowpal_wabbit/vowpalwabbit'],
+              # library_dirs=['/mnt/vowpal_wabbit/vowpalwabbit'],
               libraries=['allreduce', 'vw', 'boost_program_options-mt'],
               )
           ],
