@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>vowpal_porpoise by josephreisinger</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>vowpal_porpoise</h1>
+        <p>lightweight python wrapper for vowpal wabbit</p>
+
+        <p class="view"><a href="https://github.com/josephreisinger/vowpal_porpoise">View the Project on GitHub <small>josephreisinger/vowpal_porpoise</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/josephreisinger/vowpal_porpoise/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/josephreisinger/vowpal_porpoise/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/josephreisinger/vowpal_porpoise">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>vowpal_porpoise</h1>
+
+<p>Lightweight python wrapper for <a href="https://github.com/JohnLangford/vowpal_wabbit/">vowpal_wabbit</a>.</p>
+
+<p>Why: Scalable, blazingly fast machine learning.</p>
+
+<h2>Install</h2>
+
+<ol>
+<li>Install <a href="https://github.com/JohnLangford/vowpal_wabbit/">vowpal_wabbit</a>. Clone and run <code>make</code>
+</li>
+<li>Install <a href="http://www.cython.org/">cython</a>. <code>pip install cython</code>
+</li>
+<li>Clone <a href="https://github.com/josephreisinger/vowpal_porpoise">vowpal_porpoise</a>
+</li>
+<li>Run: <code>python setup.py install</code> to install.</li>
+</ol><p>Now can you do: <code>import vowpal_porpoise</code> from python.</p>
+
+<h2>Examples</h2>
+
+<h3>Standard Interface</h3>
+
+<p>Linear regression with l1 penalty:</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">vowpal_porpoise</span> <span class="kn">import</span> <span class="n">VW</span>
+
+<span class="c"># Initialize the model</span>
+<span class="n">vw</span> <span class="o">=</span> <span class="n">VW</span><span class="p">(</span><span class="n">moniker</span><span class="o">=</span><span class="s">'test'</span><span class="p">,</span>    <span class="c"># a name for the model</span>
+        <span class="n">passes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>         <span class="c"># vw arg: passes</span>
+        <span class="n">loss</span><span class="o">=</span><span class="s">'quadratic'</span><span class="p">,</span>  <span class="c"># vw arg: loss</span>
+        <span class="n">learning_rate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c"># vw arg: learning_rate</span>
+        <span class="n">l1</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>           <span class="c"># vw arg: l1</span>
+
+<span class="c"># Inside the with training() block a vw process will be </span>
+<span class="c"># open to communication</span>
+<span class="k">with</span> <span class="n">vw</span><span class="o">.</span><span class="n">training</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="p">[</span><span class="s">'1 |big red square'</span><span class="p">,</span>\
+                      <span class="s">'0 |small blue circle'</span><span class="p">]:</span>
+        <span class="n">vw</span><span class="o">.</span><span class="n">push_instance</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+
+    <span class="c"># here stdin will close</span>
+<span class="c"># here the vw process will have finished</span>
+
+<span class="c"># Inside the with predicting() block we can stream instances and </span>
+<span class="c"># acquire their labels</span>
+<span class="k">with</span> <span class="n">vw</span><span class="o">.</span><span class="n">predicting</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="p">[</span><span class="s">'1 |large burnt sienna rhombus'</span><span class="p">,</span>\
+                      <span class="s">'0 |little teal oval'</span><span class="p">]:</span>
+        <span class="n">vw</span><span class="o">.</span><span class="n">push_instance</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+
+<span class="c"># Read the predictions like this:</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vw</span><span class="o">.</span><span class="n">read_predictions_</span><span class="p">())</span>
+</pre></div>
+
+<p>L-BFGS with a rank-5 approximation:</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">vowpal_porpoise</span> <span class="kn">import</span> <span class="n">VW</span>
+
+<span class="c"># Initialize the model</span>
+<span class="n">vw</span> <span class="o">=</span> <span class="n">VW</span><span class="p">(</span><span class="n">moniker</span><span class="o">=</span><span class="s">'test_lda'</span><span class="p">,</span>  <span class="c"># a name for the model</span>
+        <span class="n">passes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>           <span class="c"># vw arg: passes</span>
+        <span class="n">lbfgs</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>          <span class="c"># turn on lbfgs</span>
+        <span class="n">mem</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>               <span class="c"># lbfgs rank</span>
+</pre></div>
+
+<p>Latent Dirichlet Allocation with 100 topics:</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">vowpal_porpoise</span> <span class="kn">import</span> <span class="n">VW</span>
+
+<span class="c"># Initialize the model</span>
+<span class="n">vw</span> <span class="o">=</span> <span class="n">VW</span><span class="p">(</span><span class="n">moniker</span><span class="o">=</span><span class="s">'test_lda'</span><span class="p">,</span>  <span class="c"># a name for the model</span>
+        <span class="n">passes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>           <span class="c"># vw arg: passes</span>
+        <span class="n">lda</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>             <span class="c"># turn on lda</span>
+        <span class="n">minibatch</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>       <span class="c"># set the minibatch size</span>
+</pre></div>
+
+<h3>Library Interace (TESTING)</h3>
+
+<p>Via the <code>VW</code> interface:</p>
+
+<div class="highlight"><pre><span class="k">with</span> <span class="n">vw</span><span class="o">.</span><span class="n">predicting_library</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="p">[</span><span class="s">'1 |large burnt sienna rhombus'</span><span class="p">,</span> \
+                      <span class="s">'1 |little teal oval'</span><span class="p">]:</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">vw</span><span class="o">.</span><span class="n">push_instance</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+</pre></div>
+
+<p>Now the predictions are returned directly to the parent process, rather than having to read from disk.
+See <code>examples/example1.py</code> for more details.</p>
+
+<p>Alternatively you can use the raw library interface:</p>
+
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">vw_c</span>
+<span class="n">vw</span> <span class="o">=</span> <span class="n">vw_c</span><span class="o">.</span><span class="n">VW</span><span class="p">(</span><span class="s">"--loss=quadratic --l1=0.01 -f model"</span><span class="p">)</span>
+<span class="n">vw</span><span class="o">.</span><span class="n">learn</span><span class="p">(</span><span class="s">"1 |this is a positive example"</span><span class="p">)</span>
+<span class="n">vw</span><span class="o">.</span><span class="n">learn</span><span class="p">(</span><span class="s">"0 |this is a negative example"</span><span class="p">)</span>
+<span class="n">vw</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+</pre></div>
+
+<p>Currently does not support passes due to some limitations in the underlying vw C code.</p>
+
+<h3>Need more examples?</h3>
+
+<ul>
+<li>
+<a href="https://github.com/josephreisinger/vowpal_porpoise/blob/master/examples/example1.py">example1.py</a>: SimpleModel class wrapper around VP (both standard and library flavors)</li>
+<li>
+<a href="https://github.com/josephreisinger/vowpal_porpoise/blob/master/examples/example_library.py">example_library.py</a>: Demonstrates the low-level vw library wrapper, classifying lines of <strong>alice in wonderland</strong> vs <strong>through the looking glass</strong>.</li>
+</ul><h2>Why</h2>
+
+<p>vowpal_wabbit is <strong>insanely</strong>
+fast and scalable. vowpal_porpoise is slower, but <strong>only</strong> during the
+initial training pass. Once the data has been properly cached it will idle while vowpal_wabbit does all the heavy lifting.
+Furthermore, vowpal_porpoise was designed to be lightweight and not to get in the way
+of vowpal_wabbit's scalability, e.g. it allows distributed learning via
+<code>--nodes</code> and does not require data to be batched in memory. In our
+research work we use vowpal_porpoise on an 80-node cluster running over multiple
+terabytes of data.</p>
+
+<p>The main benefit of vowpal_porpoise is allowing <strong>rapid prototyping</strong> of new
+models and feature extractors. We found that we had been doing this in an
+ad-hoc way using python scripts to shuffle around massive gzipped text files,
+so we just closed the loop and made vowpal_wabbit a python library.</p>
+
+<h2>How it works</h2>
+
+<p>Wraps the vw binary in a subprocess and uses stdin to push data, temporary
+files to pull predictions. Why not use the prediction labels vw provides on stdout? It
+turns out that the python GIL basically makes streamining in and out of a
+process (even asynchronously) painfully difficult. If you know of a clever way
+to get around this, please email me. In other languages (e.g. in a forthcoming
+scala wrapper) this is not an issue.</p>
+
+<p>Alternatively, you can use a pure api call (<code>vw_c</code>, wrapping libvw) for prediction.</p>
+
+<h2>Contact</h2>
+
+<p>Joseph Reisinger <a href="http://twitter.com/josephreisinger">@josephreisinger</a></p>
+
+<h2>Contributors</h2>
+
+<ul>
+<li>Austin Waters (<a href="mailto:austin.waters@gmail.com">austin.waters@gmail.com</a>)</li>
+<li>Joseph Reisinger (<a href="mailto:joeraii@gmail.com">joeraii@gmail.com</a>)</li>
+</ul><h2>License</h2>
+
+<p>Apache 2.0</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/josephreisinger">josephreisinger</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-33708972-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
