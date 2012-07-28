@@ -1,6 +1,6 @@
 # vowpal_porpoise
 
-Lightweight wrapper for vowpalwabbit
+Lightweight python wrapper for vowpalwabbit
 
 ## Install
 
