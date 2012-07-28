@@ -96,6 +96,22 @@ Currently does not support passes due to some limitations in the underlying vw C
 * [example1.py](https://github.com/josephreisinger/vowpal_porpoise/blob/master/examples/example1.py): SimpleModel class wrapper around VP (both standard and library flavors)
 * [example_library.py](https://github.com/josephreisinger/vowpal_porpoise/blob/master/examples/example_library.py): Demonstrates the low-level vw library wrapper, classifying lines of **alice in wonderland** vs **through the looking glass**.
 
+## Why
+
+[vowpal_wabbit](https://github.com/JohnLangford/vowpal_wabbit/) is **insanely**
+fast and scalable. ```vowpal_porpoise``` is much slower, but _only_ on the
+initial training pass. Once the data has been properly cached vw will run like
+the wind. Furthermore, ```vowpal_porpoise``` was designed not to get in the way
+of vowpal_wabbit's scalability, i.e. it allows distributed learning via
+```--nodes``` and does not require data to be batched in memory. In our
+research work we use ```vowpal_porpoise``` on a 40-node cluster running over
+terabytes of data.
+
+The main benefit of ```vowpal_porpoise``` is allowing **rapid prototyping**
+using the same feature pipeline you use for training vw. So stuff like
+train/test splits and experiment setup gets much easier. In the future we plan
+on releasing some more of the code we use to do this.
+
 ## How it works
 
 Wraps the vw binary in a subprocess and uses stdin to push data, temporary
