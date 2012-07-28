@@ -32,7 +32,7 @@ vw = VW(moniker='test',    # a name for the model
 # open to communication
 with vw.training():
     for instance in ['1 |big red square',\
-                     '0 |small blue circle']:
+                      '0 |small blue circle']:
         vw.push_instance(instance)
 
     # here stdin will close
@@ -42,7 +42,7 @@ with vw.training():
 # acquire their labels
 with vw.predicting():
     for instance in ['1 |large burnt sienna rhombus',\
-                     '0 |little teal oval']:
+                      '0 |little teal oval']:
         vw.push_instance(instance)
 
 # Read the predictions like this:
@@ -79,7 +79,7 @@ Via the ```VW``` interface:
 ```python
 with vw.predicting_library():
     for instance in ['1 |large burnt sienna rhombus', \
-                     '1 |little teal oval']:
+                      '1 |little teal oval']:
         prediction = vw.push_instance(instance)
 ```
 Now the predictions are returned directly to the parent process, rather than having to read from disk.
