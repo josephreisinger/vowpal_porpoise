@@ -34,7 +34,7 @@ with vw.training():
     # here stdin will close
 # here the vw process will have finished
 
-# Inside with predicting() we can stream instances and 
+# Inside the with predicting() block we can stream instances and 
 # acquire their labels
 with vw.predicting():
     for instance in ['1 |this is another positive example',\
@@ -71,7 +71,17 @@ vw = VW(moniker='test_lda',  # a name for the model
 
 ### Library Interace (TESTING)
 
-Raw library interface. Currently does not support passes due to some limitations in the underlying vw C code.
+Via the ```VW``` interface:
+```python
+with vw.predicting_library():
+    for instance in ['1 |this is another positive example', \
+                     '0 |this is another negative example']:
+        prediction = vw.push_instance(instance)
+```
+Now the predictions are returned directly to the parent process, rather than having to read from disk.
+See ```examples/example1.py``` for more details.
+
+Alternatively you can use the raw library interface. Currently does not support passes due to some limitations in the underlying vw C code.
 ```python
 import vw_c
 vw = vw_c.VW("--loss=quadratic --l1=0.01 -f model")
@@ -80,15 +90,6 @@ vw.learn("0 |this is a negative example")
 vw.finish()
 ```
 
-You can also access this code via the ```VW``` interface for prediction like this:
-```python
-with vw.predicting_library():
-    for instance in ['1 |this is another positive example', \
-                     '0 |this is another negative example']:
-        prediction = vw.push_instance(instance)
-```
-see ```examples/example1.py``` for more details.
-
 ### Need more examples?
 
 * ```example1.py```: SimpleModel class wrapper around VP (both standard and library flavors)
@@ -96,7 +97,14 @@ see ```examples/example1.py``` for more details.
 
 ## How it works
 
-Wraps the vw binary in a subprocess and uses stdin to push data, temporary files to pull predictions. Alternatively, you can use a pure api call (wrapping libvw) for prediction.
+Wraps the vw binary in a subprocess and uses stdin to push data, temporary
+files to pull predictions. Why use the prediction labels provided to stdout? It
+turns out that the python GIL basically makes streamining in and out of a
+process (even asynchronously) painfully difficult. If you know of a clever way
+to get around this, please email me. In other languages (e.g. in a forthcoming
+scala wrapper) this is not an issue.
+
+Alternatively, you can use a pure api call (```vw_c```, wrapping libvw) for prediction.
 
 
 ## Contact
