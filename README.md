@@ -1,6 +1,6 @@
-# vowpal_porpoise v0.2
+# vowpal_porpoise
 
-Lightweight wrapper for vowpal wabbit:
+Lightweight wrapper for vowpalwabbit
 
 ## Install
 
@@ -21,18 +21,83 @@ from python.
 
 ## Examples
 
-* ```example1.py```: SimpleModel class wrapper around VP
-* ```example_library.py```: Demonstrates the vw library wrapper, classifying alice in wonderland.
+### Standard Interface
+
+Linear regression with l1 penalty:
+```python
+from vowpal_porpoise import VW
+
+# Initialize the model
+vw = VW(moniker='test',    # a name for the model
+        passes=10,         # vw arg: passes
+        loss='quadratic',  # vw arg: loss
+        learning_rate=10,  # vw arg: learning_rate
+        l1=0.01)           # vw arg: l1
+
+# Inside the with training() block a vw process will be open to communication
+with vw.training():
+    for instance in ['1 |this is a positive example', '0 |this is a negative example']:
+        vw.push_instance(instance)
+
+    # here stdin will close
+# here the vw process will have finished
+
+# Inside with predicting() we can stream instances and acquire their labels
+with vw.predicting():
+    for instance in ['1 |this is another positive example', '0 |this is another negative example']:
+        vw.push_instance(instance)
+
+# Read the predictions like this:
+predictions = list(vw.read_predictions_())
+```
+
+L-BFGS with a rank-5 approximation:
+```python
+from vowpal_porpoise import VW
+
+# Initialize the model
+vw = VW(moniker='test_lda',  # a name for the model
+        passes=10,           # vw arg: passes
+        lbfgs=True,          # turn on lbfgs
+        mem=5)               # lbfgs rank
+```
+
+Latent Dirichlet Allocation with 100 topics:
+```python
+from vowpal_porpoise import VW
+
+# Initialize the model
+vw = VW(moniker='test_lda',  # a name for the model
+        passes=10,           # vw arg: passes
+        lda=100,             # turn on lda
+        minibatch=100)       # set the minibatch size
+```
+
+
+
+### Library Interace (TESTING)
+
+```python
+```
+
+### Want More?
+
+* ```example1.py```: SimpleModel class wrapper around VP (both standard and library flavors)
+* ```example_library.py```: Demonstrates the low-level vw library wrapper, classifying lines of ``alice in wonderland'' vs ``through the looking glass''.
 
 ## How it works
 
 Wraps the vw binary in a subprocess and uses stdin to push data, temporary files to pull predictions. Alterantively, you can use a pure api call (wrapping libvw) for prediction.
 
 
+## Contact
+
+Joseph Reisinger (joeraii@gmail.com)
+
 ## Contributors
 
-Austin Waters (austin.waters@gmail.com)
-Joseph Reisinger (joeraii@gmail.com)
+* Austin Waters (austin.waters@gmail.com)
+* Joseph Reisinger (joeraii@gmail.com)
 
 ## License
 

@@ -1,13 +1,11 @@
-from vowpal_porpoise import VW, SimpleInstance, VPLogger
+from vowpal_porpoise import VW, SimpleInstance
 import itertools
 
 
 class SimpleModel(object):
     def __init__(self, moniker):
         self.moniker = moniker
-        self.log = VPLogger()
         self.model = VW(moniker=moniker, \
-                        logger=self.log, \
                         **{'passes': 10,
                            'learning_rate': 15,
                            'power_t': 1.0, })
@@ -16,30 +14,30 @@ class SimpleModel(object):
         """
         Trains the model on the given data stream.
         """
-        self.log.info('%s: training' % (self.moniker))
+        print '%s: training' % (self.moniker)
         with self.model.training():
             seen = 0
             for instance in instance_stream:
                 self.model.push_instance(instance)
                 seen += 1
                 if seen % 10000 == 0:
-                    self.log.debug('streamed %d instances...' % seen)
-            self.log.debug('done streaming.')
-        self.log.info('%s: trained on %d data points' % (self.moniker, seen))
+                    print 'streamed %d instances...' % seen
+            print 'done streaming.'
+        print '%s: trained on %d data points' % (self.moniker, seen)
         return self
 
     def predict_library(self, instance_stream):
-        self.log.info('%s: predicting' % self.moniker)
+        print '%s: predicting' % self.moniker
         with self.model.predicting_library():
             seen = 0
             for instance in instance_stream:
                 yield instance, self.model.push_instance(instance)
                 seen += 1
 
-        self.log.info('%s: predicted for %d data points' % (self.moniker, seen))
+        print '%s: predicted for %d data points' % (self.moniker, seen)
 
     def predict(self, instance_stream):
-        self.log.info('%s: predicting' % self.moniker)
+        print '%s: predicting' % self.moniker
         instances = []
         with self.model.predicting():
             seen = 0
@@ -48,7 +46,7 @@ class SimpleModel(object):
                 instances.append(instance)
                 seen += 1
 
-        self.log.info('%s: predicted for %d data points' % (self.moniker, seen))
+        print '%s: predicted for %d data points' % (self.moniker, seen)
         predictions = list(self.model.read_predictions_())
         if seen != len(predictions):
             raise Exception("Number of labels and predictions do not match!  (%d vs %d)" % \
