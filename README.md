@@ -92,7 +92,7 @@ see ```examples/example1.py``` for more details.
 ### Need more examples?
 
 * ```example1.py```: SimpleModel class wrapper around VP (both standard and library flavors)
-* ```example_library.py```: Demonstrates the low-level vw library wrapper, classifying lines of ``alice in wonderland`` vs ``through the looking glass``.
+* ```example_library.py```: Demonstrates the low-level vw library wrapper, classifying lines of **alice in wonderland** vs **through the looking glass**.
 
 ## How it works
 
