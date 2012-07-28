@@ -79,11 +79,15 @@ vw = VW(moniker='test_lda',  # a name for the model
 
 Raw library interface. Currently does not support passes due to some limitations in the underlying vw C code.
 ```python
-import vw_py
+import vw_c
+vw = vw_c.VW("--loss=quadratic --l1=0.01 -f model")
+vw.learn("1 |this is a positive example")
+vw.learn("0 |this is a negative example")
+vw.finish()
 ```
 
 You can also access this code via the ```VW``` interface for prediction like this:
-```
+```python
 with vw.predicting_library():
     for instance in ['1 |this is another positive example', '0 |this is another negative example']:
         vw.push_instance(instance)

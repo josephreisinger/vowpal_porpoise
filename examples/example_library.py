@@ -23,7 +23,7 @@ def make_instance(label, features):
 def evaluate(train_data, test_data, passes, params):
     a = vw_c.VW(params)
 
-    # Train the model 
+    # Train the model
     train_correct = 0
     train_total = 0
     for p in range(passes):
