@@ -24,17 +24,21 @@ vw = VW(moniker='test',    # a name for the model
         learning_rate=10,  # vw arg: learning_rate
         l1=0.01)           # vw arg: l1
 
-# Inside the with training() block a vw process will be open to communication
+# Inside the with training() block a vw process will be 
+# open to communication
 with vw.training():
-    for instance in ['1 |this is a positive example', '0 |this is a negative example']:
+    for instance in ['1 |this is a positive example',\
+                     '0 |this is a negative example']:
         vw.push_instance(instance)
 
     # here stdin will close
 # here the vw process will have finished
 
-# Inside with predicting() we can stream instances and acquire their labels
+# Inside with predicting() we can stream instances and 
+# acquire their labels
 with vw.predicting():
-    for instance in ['1 |this is another positive example', '0 |this is another negative example']:
+    for instance in ['1 |this is another positive example',\
+                     '0 |this is another negative example']:
         vw.push_instance(instance)
 
 # Read the predictions like this:
@@ -79,7 +83,8 @@ vw.finish()
 You can also access this code via the ```VW``` interface for prediction like this:
 ```python
 with vw.predicting_library():
-    for instance in ['1 |this is another positive example', '0 |this is another negative example']:
+    for instance in ['1 |this is another positive example', \
+                     '0 |this is another negative example']:
         prediction = vw.push_instance(instance)
 ```
 see ```examples/example1.py``` for more details.
@@ -87,11 +92,11 @@ see ```examples/example1.py``` for more details.
 ### Need more examples?
 
 * ```example1.py```: SimpleModel class wrapper around VP (both standard and library flavors)
-* ```example_library.py```: Demonstrates the low-level vw library wrapper, classifying lines of ``alice in wonderland'' vs ``through the looking glass''.
+* ```example_library.py```: Demonstrates the low-level vw library wrapper, classifying lines of ``alice in wonderland`` vs ``through the looking glass``.
 
 ## How it works
 
-Wraps the vw binary in a subprocess and uses stdin to push data, temporary files to pull predictions. Alterantively, you can use a pure api call (wrapping libvw) for prediction.
+Wraps the vw binary in a subprocess and uses stdin to push data, temporary files to pull predictions. Alternatively, you can use a pure api call (wrapping libvw) for prediction.
 
 
 ## Contact
