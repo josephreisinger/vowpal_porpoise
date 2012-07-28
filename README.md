@@ -90,11 +90,9 @@ You can also access this code via the ```VW``` interface for prediction like thi
 ```python
 with vw.predicting_library():
     for instance in ['1 |this is another positive example', '0 |this is another negative example']:
-        vw.push_instance(instance)
-
-# Read the predictions like this:
-predictions = list(vw.read_predictions_())
+        prediction = vw.push_instance(instance)
 ```
+see ```examples/example1.py``` for more details.
 
 ### Need more examples?
 
