@@ -115,7 +115,7 @@ so we just closed the loop and made vowpal\_wabbit a python library.
 ## How it works
 
 Wraps the vw binary in a subprocess and uses stdin to push data, temporary
-files to pull predictions. Why use the prediction labels provided to stdout? It
+files to pull predictions. Why not use the prediction labels vw provides on stdout? It
 turns out that the python GIL basically makes streamining in and out of a
 process (even asynchronously) painfully difficult. If you know of a clever way
 to get around this, please email me. In other languages (e.g. in a forthcoming
