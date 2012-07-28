@@ -4,7 +4,7 @@ import sys
 import subprocess
 import shlex
 import tempfile
-from vp_utils import memoized, safe_remove, VPLogger
+from vp_utils import safe_remove, VPLogger
 
 import vw_py
 
@@ -121,7 +121,6 @@ class VW:
 
         self.working_directory = working_dir or os.getcwd()
 
-    # @memoized
     def vw_base_command(self, base):
         l = base
         if self.bits                is not None: l.append('-b %d' % self.bits)
