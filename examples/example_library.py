@@ -1,5 +1,5 @@
 import gzip
-import vw_py
+import vw_c
 import random
 from itertools import ifilter, imap, izip, repeat
 
@@ -21,7 +21,7 @@ def make_instance(label, features):
 
 
 def evaluate(train_data, test_data, passes, params):
-    a = vw_py.VW(params)
+    a = vw_c.VW(params)
 
     # Train the model 
     train_correct = 0
@@ -38,7 +38,7 @@ def evaluate(train_data, test_data, passes, params):
     a.finish()
 
     # test
-    b = vw_py.VW("--cache_file=alice.cache -i alice.model")
+    b = vw_c.VW("--cache_file=alice.cache -i alice.model")
 
     test_correct = 0
     test_total = 0

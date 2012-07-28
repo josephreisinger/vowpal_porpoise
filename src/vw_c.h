@@ -1,5 +1,5 @@
-#ifndef VW_PY_H
-#define VW_PY_H
+#ifndef VW_C_H
+#define VW_C_H
 
 void initialize(char* params);
 void finish();

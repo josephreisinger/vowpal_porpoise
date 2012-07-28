@@ -77,10 +77,22 @@ vw = VW(moniker='test_lda',  # a name for the model
 
 ### Library Interace (TESTING)
 
+Raw library interface. Currently does not support passes due to some limitations in the underlying vw C code.
 ```python
+import vw_py
 ```
 
-### Want More?
+You can also access this code via the ```VW``` interface for prediction like this:
+```
+with vw.predicting_library():
+    for instance in ['1 |this is another positive example', '0 |this is another negative example']:
+        vw.push_instance(instance)
+
+# Read the predictions like this:
+predictions = list(vw.read_predictions_())
+```
+
+### Need more examples?
 
 * ```example1.py```: SimpleModel class wrapper around VP (both standard and library flavors)
 * ```example_library.py```: Demonstrates the low-level vw library wrapper, classifying lines of ``alice in wonderland'' vs ``through the looking glass''.

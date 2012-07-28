@@ -1,4 +1,4 @@
-#include "vw_py.h"
+#include "vw_c.h"
 
 #include <iostream>
 #include <vowpalwabbit/vw.h>
