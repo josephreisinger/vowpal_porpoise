@@ -1,17 +1,39 @@
-vowpal_porpoise v0.1
-
+# vowpal_porpoise v0.2
 
 Lightweight wrapper for vowpal wabbit:
 
+## Install:
+
+1. First install vw in your path. Git clone it here:
+
 https://github.com/JohnLangford/vowpal_wabbit/
 
-Examples:
+2. To install vowpal_porpoise, run:
+
+```bash
+python setup.py install
+```
+
+3. Now can you do:
+
+```python
+import vowpal_porpoise
+```
+
+from python.
+
+
+## Examples:
 
 example1.py: SimpleModel class wrapper around VP
 example2.py: Demonstrates the vw library wrapper, classifying alice in wonderland.
 
 
-Contributors
+## Contributors
 
 Austin Waters (austin.waters@gmail.com)
 Joseph Reisinger (joeraii@gmail.com)
+
+## License
+
+Apache 2.0
