@@ -1,11 +1,11 @@
 # vowpal_porpoise
 
-Lightweight python wrapper for vowpalwabbit
+Lightweight python wrapper for [vowpal_wabbit](https://github.com/JohnLangford/vowpal_wabbit/).
 
 ## Install
 
-1. First install vw in your path. Git clone it here: https://github.com/JohnLangford/vowpal_wabbit/
-2. Also make sure that cython is installed: ```pip install cython```
+1. First install vw in your path. Git clone it here: https://github.com/JohnLangford/vowpal_wabbit/ then run ```make```.
+2. Install [cython](http://www.cython.org/): ```pip install cython```
 3. To install vowpal_porpoise, run: ```python setup.py install```
 4. Now can you do: ```import vowpal_porpoise``` from python.
 
@@ -27,8 +27,8 @@ vw = VW(moniker='test',    # a name for the model
 # Inside the with training() block a vw process will be 
 # open to communication
 with vw.training():
-    for instance in ['1 |this is a positive example',\
-                     '0 |this is a negative example']:
+    for instance in ['1 |big red square',\
+                     '0 |small blue circle']:
         vw.push_instance(instance)
 
     # here stdin will close
@@ -37,8 +37,8 @@ with vw.training():
 # Inside the with predicting() block we can stream instances and 
 # acquire their labels
 with vw.predicting():
-    for instance in ['1 |this is another positive example',\
-                     '0 |this is another negative example']:
+    for instance in ['1 |large burnt sienna rhombus',\
+                     '0 |little teal oval']:
         vw.push_instance(instance)
 
 # Read the predictions like this:
@@ -74,8 +74,8 @@ vw = VW(moniker='test_lda',  # a name for the model
 Via the ```VW``` interface:
 ```python
 with vw.predicting_library():
-    for instance in ['1 |this is another positive example', \
-                     '0 |this is another negative example']:
+    for instance in ['1 |large burnt sienna rhombus', \
+                     '1 |little teal oval']:
         prediction = vw.push_instance(instance)
 ```
 Now the predictions are returned directly to the parent process, rather than having to read from disk.
@@ -93,8 +93,8 @@ Currently does not support passes due to some limitations in the underlying vw C
 
 ### Need more examples?
 
-* ```example1.py```: SimpleModel class wrapper around VP (both standard and library flavors)
-* ```example_library.py```: Demonstrates the low-level vw library wrapper, classifying lines of **alice in wonderland** vs **through the looking glass**.
+* [example1.py](https://github.com/josephreisinger/vowpal_porpoise/blob/master/examples/example1.py): SimpleModel class wrapper around VP (both standard and library flavors)
+* [example_library.py](https://github.com/josephreisinger/vowpal_porpoise/blob/master/examples/example_library.py): Demonstrates the low-level vw library wrapper, classifying lines of **alice in wonderland** vs **through the looking glass**.
 
 ## How it works
 
