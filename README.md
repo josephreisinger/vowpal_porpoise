@@ -98,19 +98,19 @@ Currently does not support passes due to some limitations in the underlying vw C
 
 ## Why
 
-vowpal _ wabbit is **insanely**
-fast and scalable. vowpal_porpoise is slower, but _only_ during the
-initial training pass. Once the data has been properly cached it will idle while vowpal _ wabbit does all the heavy lifting.
-Furthermore, vowpal_porpoise was designed to be lightweight and not to get in the way
-of vowpal _ wabbit's scalability, e.g. it allows distributed learning via
+vowpal\_wabbit is **insanely**
+fast and scalable. vowpal_porpoise is slower, but **only** during the
+initial training pass. Once the data has been properly cached it will idle while vowpal\_wabbit does all the heavy lifting.
+Furthermore, vowpal\_porpoise was designed to be lightweight and not to get in the way
+of vowpal\_wabbit's scalability, e.g. it allows distributed learning via
 ```--nodes``` and does not require data to be batched in memory. In our
-research work we use vowpal_porpoise on an 80-node cluster running over multiple
+research work we use vowpal\_porpoise on an 80-node cluster running over multiple
 terabytes of data.
 
-The main benefit of vowpal_porpoise is allowing **rapid prototyping** of new
+The main benefit of vowpal\_porpoise is allowing **rapid prototyping** of new
 models and feature extractors. We found that we had been doing this in an
 ad-hoc way using python scripts to shuffle around massive gzipped text files,
-so we just closed the loop and made vowpal _ wabbit a python library.
+so we just closed the loop and made vowpal\_wabbit a python library.
 
 ## How it works
 
