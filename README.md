@@ -8,6 +8,12 @@ Lightweight wrapper for vowpal wabbit:
 
 https://github.com/JohnLangford/vowpal_wabbit/
 
+Also make sure that cython is installed
+
+```bash
+pip install cython
+```
+
 2. To install vowpal_porpoise, run:
 
 ```bash
