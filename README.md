@@ -6,11 +6,11 @@ Lightweight wrapper for vowpalwabbit
 
 1. First install vw in your path. Git clone it here: https://github.com/JohnLangford/vowpal_wabbit/
 2. Also make sure that cython is installed
-```bash
+```
 pip install cython
 ```
 3. To install vowpal_porpoise, run:
-```bash
+```
 python setup.py install
 ```
 4. Now can you do:
