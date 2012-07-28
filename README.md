@@ -2,12 +2,16 @@
 
 Lightweight python wrapper for [vowpal_wabbit](https://github.com/JohnLangford/vowpal_wabbit/).
 
+Why: Scalable, blazingly fast machine learning.
+
 ## Install
 
-1. First install vw in your path. Git clone it here: https://github.com/JohnLangford/vowpal_wabbit/ then run ```make```.
-2. Install [cython](http://www.cython.org/): ```pip install cython```
-3. To install vowpal_porpoise, run: ```python setup.py install```
-4. Now can you do: ```import vowpal_porpoise``` from python.
+1. Install [vowpal_wabbit](https://github.com/JohnLangford/vowpal_wabbit/). Clone and run ``make``
+2. Install [cython](http://www.cython.org/). ```pip install cython```
+3. Clone [vowpal_porpoise](https://github.com/josephreisinger/vowpal_porpoise)
+4. Run: ```python setup.py install``` to install.
+
+Now can you do: ```import vowpal_porpoise``` from python.
 
 ## Examples
 
@@ -126,7 +130,7 @@ Alternatively, you can use a pure api call (```vw_c```, wrapping libvw) for pred
 
 ## Contact
 
-Joseph Reisinger (joeraii@gmail.com)
+Joseph Reisinger [@josephreisinger](http://twitter.com/josephreisinger)
 
 ## Contributors
 
