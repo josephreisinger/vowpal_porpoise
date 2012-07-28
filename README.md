@@ -21,8 +21,8 @@ from python.
 
 ## Examples
 
-example1.py: SimpleModel class wrapper around VP
-example2.py: Demonstrates the vw library wrapper, classifying alice in wonderland.
+* example1.py: SimpleModel class wrapper around VP
+* example2.py: Demonstrates the vw library wrapper, classifying alice in wonderland.
 
 ## How it works
 
