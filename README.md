@@ -81,7 +81,7 @@ with vw.predicting_library():
 Now the predictions are returned directly to the parent process, rather than having to read from disk.
 See ```examples/example1.py``` for more details.
 
-Alternatively you can use the raw library interface. Currently does not support passes due to some limitations in the underlying vw C code.
+Alternatively you can use the raw library interface:
 ```python
 import vw_c
 vw = vw_c.VW("--loss=quadratic --l1=0.01 -f model")
@@ -89,6 +89,7 @@ vw.learn("1 |this is a positive example")
 vw.learn("0 |this is a negative example")
 vw.finish()
 ```
+Currently does not support passes due to some limitations in the underlying vw C code.
 
 ### Need more examples?
 
