@@ -9,15 +9,11 @@ Lightweight wrapper for vowpal wabbit:
 ```bash
 pip install cython
 ```
-
 3. To install vowpal_porpoise, run:
-
 ```bash
 python setup.py install
 ```
-
 4. Now can you do:
-
 ```python
 import vowpal_porpoise
 ```
