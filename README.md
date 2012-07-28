@@ -14,7 +14,7 @@ pip install cython
 python setup.py install
 ```
 4. Now can you do:
-```python
+```
 import vowpal_porpoise
 ```
 from python.
