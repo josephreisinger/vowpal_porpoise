@@ -54,10 +54,10 @@ L-BFGS with a rank-5 approximation:
 from vowpal_porpoise import VW
 
 # Initialize the model
-vw = VW(moniker='test_lda',  # a name for the model
-        passes=10,           # vw arg: passes
-        lbfgs=True,          # turn on lbfgs
-        mem=5)               # lbfgs rank
+vw = VW(moniker='test_lbfgs', # a name for the model
+        passes=10,            # vw arg: passes
+        lbfgs=True,           # turn on lbfgs
+        mem=5)                # lbfgs rank
 ```
 
 Latent Dirichlet Allocation with 100 topics:
