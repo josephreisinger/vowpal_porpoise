@@ -6,9 +6,6 @@ import shlex
 import tempfile
 from vp_utils import safe_remove, VPLogger
 
-import vw_py
-
-
 class VW:
     def __init__(self,
                  logger=None,
@@ -220,6 +217,7 @@ class VW:
         self.push_instance = self.push_instance_stdin
 
     def start_predicting_library(self):
+        import vw_py
         model_file = self.get_model_file()
         self.vw_process = vw_py.VW(self.vw_test_command_library(model_file))
 
