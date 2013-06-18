@@ -1,5 +1,11 @@
 import setuptools
 import setuptools.extension
+
+setuptools.dist.Distribution(dict(setup_requires='Cython'))
+# `setup_requires` is parsed and acted upon immediately; from here on out
+# the yoursharedsetuppackage is installed and importable.
+# Thanks to Martijn Pieters http://stackoverflow.com/a/12061891/351084
+
 from Cython.Distutils import build_ext
 
 setuptools.setup(name='vowpal_porpoise',
