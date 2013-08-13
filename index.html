@@ -28,13 +28,15 @@
         </ul>
       </header>
       <section>
-        <h1>vowpal_porpoise</h1>
+        <h1>
+<a name="vowpal_porpoise" class="anchor" href="#vowpal_porpoise"><span class="octicon octicon-link"></span></a>vowpal_porpoise</h1>
 
 <p>Lightweight python wrapper for <a href="https://github.com/JohnLangford/vowpal_wabbit/">vowpal_wabbit</a>.</p>
 
 <p>Why: Scalable, blazingly fast machine learning.</p>
 
-<h2>Install</h2>
+<h2>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h2>
 
 <ol>
 <li>Install <a href="https://github.com/JohnLangford/vowpal_wabbit/">vowpal_wabbit</a>. Clone and run <code>make</code>
@@ -46,9 +48,11 @@
 <li>Run: <code>python setup.py install</code> to install.</li>
 </ol><p>Now can you do: <code>import vowpal_porpoise</code> from python.</p>
 
-<h2>Examples</h2>
+<h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
 
-<h3>Standard Interface</h3>
+<h3>
+<a name="standard-interface" class="anchor" href="#standard-interface"><span class="octicon octicon-link"></span></a>Standard Interface</h3>
 
 <p>Linear regression with l1 penalty:</p>
 
@@ -104,7 +108,8 @@
         <span class="n">minibatch</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>       <span class="c"># set the minibatch size</span>
 </pre></div>
 
-<h3>Library Interace (TESTING)</h3>
+<h3>
+<a name="library-interace-testing" class="anchor" href="#library-interace-testing"><span class="octicon octicon-link"></span></a>Library Interace (TESTING)</h3>
 
 <p>Via the <code>VW</code> interface:</p>
 
@@ -128,14 +133,16 @@ See <code>examples/example1.py</code> for more details.</p>
 
 <p>Currently does not support passes due to some limitations in the underlying vw C code.</p>
 
-<h3>Need more examples?</h3>
+<h3>
+<a name="need-more-examples" class="anchor" href="#need-more-examples"><span class="octicon octicon-link"></span></a>Need more examples?</h3>
 
 <ul>
 <li>
 <a href="https://github.com/josephreisinger/vowpal_porpoise/blob/master/examples/example1.py">example1.py</a>: SimpleModel class wrapper around VP (both standard and library flavors)</li>
 <li>
 <a href="https://github.com/josephreisinger/vowpal_porpoise/blob/master/examples/example_library.py">example_library.py</a>: Demonstrates the low-level vw library wrapper, classifying lines of <strong>alice in wonderland</strong> vs <strong>through the looking glass</strong>.</li>
-</ul><h2>Why</h2>
+</ul><h2>
+<a name="why" class="anchor" href="#why"><span class="octicon octicon-link"></span></a>Why</h2>
 
 <p>vowpal_wabbit is <strong>insanely</strong>
 fast and scalable. vowpal_porpoise is slower, but <strong>only</strong> during the
@@ -151,7 +158,8 @@ models and feature extractors. We found that we had been doing this in an
 ad-hoc way using python scripts to shuffle around massive gzipped text files,
 so we just closed the loop and made vowpal_wabbit a python library.</p>
 
-<h2>How it works</h2>
+<h2>
+<a name="how-it-works" class="anchor" href="#how-it-works"><span class="octicon octicon-link"></span></a>How it works</h2>
 
 <p>Wraps the vw binary in a subprocess and uses stdin to push data, temporary
 files to pull predictions. Why not use the prediction labels vw provides on stdout? It
@@ -162,16 +170,19 @@ scala wrapper) this is not an issue.</p>
 
 <p>Alternatively, you can use a pure api call (<code>vw_c</code>, wrapping libvw) for prediction.</p>
 
-<h2>Contact</h2>
+<h2>
+<a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h2>
 
 <p>Joseph Reisinger <a href="http://twitter.com/josephreisinger">@josephreisinger</a></p>
 
-<h2>Contributors</h2>
+<h2>
+<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h2>
 
 <ul>
 <li>Austin Waters (<a href="mailto:austin.waters@gmail.com">austin.waters@gmail.com</a>)</li>
 <li>Joseph Reisinger (<a href="mailto:joeraii@gmail.com">joeraii@gmail.com</a>)</li>
-</ul><h2>License</h2>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>Apache 2.0</p>
       </section>
