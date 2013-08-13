@@ -1,3 +1,8 @@
+"""
+This example showcases how to uses scikit-learn's cross-validation tools with
+VW_Classifier. We load the MNIST digits dataset, convert it to VW_Classifier's
+expected input format, then classify the digit as < 5 or >= 5.
+"""
 import numpy as np
 from sklearn.base import TransformerMixin
 from sklearn.datasets import load_digits
@@ -52,11 +57,11 @@ def main():
     # print out results from cross-validation
     estimator = gs.best_estimator_
     score = gs.best_score_
-    print 'Achieved a F1 score of %f using l2 == %f during cross validation' % (score, estimator.l2)
+    print 'Achieved a F1 score of %f using l2 == %f during cross-validation' % (score, estimator.l2)
 
     # print confusion matrix on test data
     y_est = estimator.fit(X_train, y_train).predict(X_test)
-    print 'Confusing Matrix:'
+    print 'Confusion Matrix:'
     print confusion_matrix(y_test, y_est)
 
 
