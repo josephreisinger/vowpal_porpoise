@@ -16,11 +16,11 @@ class _VW(sklearn.base.BaseEstimator):
   def __init__(self,
         logger              = None,
         vw                  = 'vw',
-        moniker             = None,
+        moniker             = 'moniker',
         name                = None,
         bits                = None,
         loss                = None,
-        passes              = None,
+        passes              = 10,
         log_stderr_to_file  = False,
         silent              = False,
         l1                  = None,
@@ -44,37 +44,35 @@ class _VW(sklearn.base.BaseEstimator):
         incremental         = False,
         mem                 = None
       ):
-    self.vw = vowpal_porpoise.VW(
-        logger              = logger,
-        vw                  = vw,
-        moniker             = moniker,
-        name                = name,
-        bits                = bits,
-        loss                = loss,
-        passes              = passes,
-        log_stderr_to_file  = log_stderr_to_file,
-        silent              = silent,
-        l1                  = l1,
-        l2                  = l2,
-        learning_rate       = learning_rate,
-        quadratic           = quadratic,
-        audit               = audit,
-        power_t             = power_t,
-        adaptive            = adaptive,
-        working_dir         = working_dir,
-        decay_learning_rate = decay_learning_rate,
-        initial_t           = initial_t,
-        minibatch           = minibatch,
-        total               = total,
-        node                = node,
-        unique_id           = unique_id,
-        span_server         = span_server,
-        bfgs                = bfgs,
-        oaa                 = oaa,
-        old_model           = old_model,
-        incremental         = incremental,
-        mem                 = mem,
-    )
+    self.logger              = logger
+    self.vw                  = vw
+    self.moniker             = moniker
+    self.name                = name
+    self.bits                = bits
+    self.loss                = loss
+    self.passes              = passes
+    self.log_stderr_to_file  = log_stderr_to_file
+    self.silent              = silent
+    self.l1                  = l1
+    self.l2                  = l2
+    self.learning_rate       = learning_rate
+    self.quadratic           = quadratic
+    self.audit               = audit
+    self.power_t             = power_t
+    self.adaptive            = adaptive
+    self.working_dir         = working_dir
+    self.decay_learning_rate = decay_learning_rate
+    self.initial_t           = initial_t
+    self.minibatch           = minibatch
+    self.total               = total
+    self.node                = node
+    self.unique_id           = unique_id
+    self.span_server         = span_server
+    self.bfgs                = bfgs
+    self.oaa                 = oaa
+    self.old_model           = old_model
+    self.incremental         = incremental
+    self.mem                 = mem
 
 
   def fit(self, X, y):
@@ -89,13 +87,43 @@ class _VW(sklearn.base.BaseEstimator):
     """
     examples = _as_vw_strings(X, y)
 
-    # clear out old model
-    # XXX
+    # initialize model
+    self.vw_ = vowpal_porpoise.VW(
+        logger              = self.logger,
+        vw                  = self.vw,
+        moniker             = self.moniker,
+        name                = self.name,
+        bits                = self.bits,
+        loss                = self.loss,
+        passes              = self.passes,
+        log_stderr_to_file  = self.log_stderr_to_file,
+        silent              = self.silent,
+        l1                  = self.l1,
+        l2                  = self.l2,
+        learning_rate       = self.learning_rate,
+        quadratic           = self.quadratic,
+        audit               = self.audit,
+        power_t             = self.power_t,
+        adaptive            = self.adaptive,
+        working_dir         = self.working_dir,
+        decay_learning_rate = self.decay_learning_rate,
+        initial_t           = self.initial_t,
+        minibatch           = self.minibatch,
+        total               = self.total,
+        node                = self.node,
+        unique_id           = self.unique_id,
+        span_server         = self.span_server,
+        bfgs                = self.bfgs,
+        oaa                 = self.oaa,
+        old_model           = self.old_model,
+        incremental         = self.incremental,
+        mem                 = self.mem,
+    )
 
     # add examples to model
-    with self.vw.training():
+    with self.vw_.training():
       for instance in examples:
-        self.vw.push_instance(instance)
+        self.vw_.push_instance(instance)
 
     # learning done after "with" statement
     return self
@@ -111,12 +139,12 @@ class _VW(sklearn.base.BaseEstimator):
     examples = _as_vw_strings(X)
 
     # add test examples to model
-    with self.vw.predicting():
+    with self.vw_.predicting():
       for instance in examples:
-        self.vw.push_instance(instance)
+        self.vw_.push_instance(instance)
 
     # read out predictions
-    predictions = np.asarray(list(self.vw.read_predictions_()))
+    predictions = np.asarray(list(self.vw_.read_predictions_()))
 
     return predictions
 

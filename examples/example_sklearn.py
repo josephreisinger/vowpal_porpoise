@@ -1,40 +1,64 @@
-from vowpal_porpoise.sklearn import VW_Classifier, VW_Regressor
+import numpy as np
+from sklearn.base import TransformerMixin
+from sklearn.datasets import load_digits
+from sklearn.cross_validation import StratifiedKFold
+from sklearn.grid_search import GridSearchCV
+from sklearn.metrics import f1_score, confusion_matrix
+from vowpal_porpoise.sklearn import VW_Classifier
 
 
-# train + test data
-X_train = [
-    {'big': 1,   'red': 1, 'square': 1},
-    {'small':1, 'blue': 1, 'circle': 1}
-]
-Y_train = [1, -1]
+class Array2Dict(TransformerMixin):
 
-X_test  = [
-    { 'large': 1, 'burnt': 1,  'red': 1, 'rhombus': 1},
-    {'little': 1,  'blue': 1, 'oval': 1}
-]
+  def fit(self, X, y=None):
+    return self
 
-def run(cls, loss):
-  # construct Vowpal_XXX
-  vw = cls(
-      moniker='test',    # a name for the model
-      passes=10,         # vw arg: passes
-      loss='hinge',      # vw arg: loss
-      learning_rate=10,  # vw arg: learning_rate
-      silent=True,
-  )
+  def transform(self, X):
+    n_samples, n_features = np.shape(X)
+    result = []
+    for i in range(n_samples):
+      result.append({
+        str(j): X[i,j]
+        for j in range(n_features)
+        if X[i,j] != 0
+      })
+    return result
 
-  # train and predict
-  Y_test = vw.fit(X_train, Y_train).predict(X_test)
 
-  print 'model: %s' % cls.__name__
-  for (x, y) in zip(X_test, Y_test):
-    if isinstance(y, int):
-      print "%+2d | %s" % (y, x)
-    else:
-      print "%+5f | %s" % (y, x)
+def main():
+  # parameters to cross-validate over
+  parameters = {
+    'l2': np.logspace(-5, 0, num=6),
+  }
 
+  # load iris data in, make a binary decision problem out of it
+  data = load_digits()
+
+  X = Array2Dict().fit_transform(data.data)
+  y = 2 * (data.target >= 5) - 1
+
+  i = int(0.8 * len(X))
+  X_train, X_test = X[:i], X[i:]
+  y_train, y_test = y[:i], y[i:]
+
+  # do the actual learning
+  gs = GridSearchCV(
+    VW_Classifier(loss='logistic', moniker='example_sklearn', passes=10, silent=True, learning_rate=10),
+    param_grid=parameters,
+    score_func=f1_score,
+    cv=StratifiedKFold(y_train),
+  ).fit(X_train, y_train)
+
+  # print out results from cross-validation
+  estimator = gs.best_estimator_
+  score     = gs.best_score_
+  print 'Achieved a F1 score of %f using l2 == %f during cross validation' % (score, estimator.l2)
+
+  # print confusion matrix on test data
+  import ipdb; ipdb.set_trace()
+  y_est = estimator.fit(X_train, y_train).predict(X_test)
+  print 'Confusing Matrix:'
+  print confusion_matrix(y_test, y_est)
 
 
 if __name__ == '__main__':
-  run(VW_Classifier,  'hinge')
-  run(VW_Regressor,   'squared')
+  main()
