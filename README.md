@@ -72,8 +72,12 @@ vw = VW(moniker='test_lda',  # a name for the model
 ```
 
 
+### Scikit-learn Interface
 
-### Library Interace (TESTING)
+Check out examples/example_sklearn.py
+
+
+### Library Interace (DISABLED as of 2013-08-12)
 
 Via the ```VW``` interface:
 ```python
@@ -136,6 +140,7 @@ Joseph Reisinger [@josephreisinger](http://twitter.com/josephreisinger)
 
 * Austin Waters (austin.waters@gmail.com)
 * Joseph Reisinger (joeraii@gmail.com)
+* Daniel Duckworth (duckworthd@gmail.com)
 
 ## License
 
