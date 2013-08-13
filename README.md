@@ -74,7 +74,19 @@ vw = VW(moniker='test_lda',  # a name for the model
 
 ### Scikit-learn Interface
 
-Check out examples/example_sklearn.py
+vowpal_porpoise also ships with an interface into scikit-learn, which allows awesome experiment-level stuff like cross-validation:
+
+```python
+GridSearchCV(
+        VW_Classifier(loss='logistic', moniker='example_sklearn',
+                      passes=10, silent=True, learning_rate=10),
+        param_grid=parameters,
+        score_func=f1_score,
+        cv=StratifiedKFold(y_train),
+).fit(X_train, y_train)
+```
+
+Check out [example_sklearn.py](https://github.com/josephreisinger/vowpal_porpoise/blob/master/examples/example_sklearn.py) for more details
 
 
 ### Library Interace (DISABLED as of 2013-08-12)
