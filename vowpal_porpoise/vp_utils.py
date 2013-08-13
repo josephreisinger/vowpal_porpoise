@@ -8,6 +8,8 @@ def safe_remove(f):
 """
 Basic logger functionality; replace this with a real logger of your choice
 """
+import imp
+import sys
 
 
 class VPLogger:
@@ -22,3 +24,15 @@ class VPLogger:
 
     def error(self, s):
         print '[ERROR] %s' % s
+
+
+def import_non_local(name, custom_name=None):
+    """Import when you have conflicting names"""
+    custom_name = custom_name or name
+
+    f, pathname, desc = imp.find_module(name, sys.path[1:])
+    module = imp.load_module(custom_name, f, pathname, desc)
+    if f:
+      f.close()
+
+    return module
