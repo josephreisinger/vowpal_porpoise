@@ -43,7 +43,8 @@ class _VW(sklearn.base.BaseEstimator):
                  oaa=None,
                  old_model=None,
                  incremental=False,
-                 mem=None
+                 mem=None,
+                 nn=None,
                  ):
         self.logger = logger
         self.vw = vw
@@ -74,6 +75,7 @@ class _VW(sklearn.base.BaseEstimator):
         self.old_model = old_model
         self.incremental = incremental
         self.mem = mem
+        self.nn = nn
 
     def fit(self, X, y):
         """Fit Vowpal Wabbit
@@ -118,6 +120,7 @@ class _VW(sklearn.base.BaseEstimator):
             old_model=self.old_model,
             incremental=self.incremental,
             mem=self.mem,
+            nn=self.nn
         )
 
         # add examples to model
@@ -157,7 +160,6 @@ class VW_Classifier(sklearn.base.ClassifierMixin, _VW):
 
     def predict(self, X):
         result = super(VW_Classifier, self).predict(X)
-        result = 2 * (result >= 0) - 1
         return result
 
 

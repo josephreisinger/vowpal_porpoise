@@ -41,6 +41,7 @@ class VW:
                  old_model=None,
                  incremental=False,
                  mem=None,
+                 nn=None,
                  **kwargs):
         assert moniker and passes
 
@@ -100,6 +101,7 @@ class VW:
         self.oaa = oaa
         self.bfgs = bfgs
         self.mem = mem
+        self.nn = nn
 
         # Do some sanity checking for compatability between models
         if self.lda:
@@ -143,6 +145,7 @@ class VW:
         if self.audit:                           l.append('--audit')
         if self.bfgs:                            l.append('--bfgs')
         if self.adaptive:                        l.append('--adaptive')
+        if self.nn                  is not None: l.append('--nn=%d' % self.nn)
         return ' '.join(l)
 
     def vw_train_command(self, cache_file, model_file):
