@@ -233,7 +233,7 @@ class VW:
         if self.lda:
             return map(float, p.split())
         else:
-            return float(p)
+            return float(p.split()[0])
 
     def read_predictions_(self):
         for x in open(self.prediction_file):
