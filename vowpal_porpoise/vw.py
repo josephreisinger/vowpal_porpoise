@@ -103,7 +103,7 @@ class VW:
         self.mem = mem
         self.nn = nn
 
-        # Do some sanity checking for compatability between models
+        # Do some sanity checking for compatibility between models
         if self.lda:
             assert not self.l1
             assert not self.l1
